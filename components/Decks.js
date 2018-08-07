@@ -1,30 +1,33 @@
 import React, { Component } from "react";
 import { Alert, View } from "react-native";
-import { Container, Header, Left, Body, Right, Title } from "native-base";
 import {
+  Container,
+  Header,
+  Left,
+  Body,
+  Right,
+  Title,
   Content,
   List,
   ListItem,
   Text,
   Button,
-  Icon,
-  CheckBox
+  Icon
 } from "native-base";
 
 export default class Decks extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      decks: ["Simon Mignolet", "Nathaniel Clyne", "Dejan Lovren"],
-      select: false,
-      selected: []
+      decks: ["Deck 1", "Deck 2", "Deck 3"],
+      edit_mode: false
     };
   }
 
-  onPressSelectButton = () => {
+  onPressEditButton = () => {
     this.setState(prevState => {
       return Object.assign(prevState, {
-        select: true
+        edit_mode: true
       });
     });
   };
@@ -32,28 +35,13 @@ export default class Decks extends Component {
   onPressCancelButton = () => {
     this.setState(prevState => {
       return Object.assign(prevState, {
-        select: false,
-        selected: []
+        edit_mode: false
       });
     });
   };
 
-  onPressItemSelected = deck => {
-    this.setState(prevState => {
-      if (prevState.selected.includes(deck)) {
-        return Object.assign(prevState, {
-          selected: prevState.selected.filter(deckName => deckName != deck)
-        });
-      } else {
-        return Object.assign(prevState, {
-          selected: [...prevState.selected, deck]
-        });
-      }
-    });
-  };
-
-  trashSelected = () => {
-    Alert.alert("Delete decks");
+  removeDeck = deck => {
+    Alert.alert(`Are you sure you want to remove ${deck}`);
   };
 
   addDeck = () => {
@@ -61,33 +49,26 @@ export default class Decks extends Component {
   };
 
   render() {
-    const { decks, select, selected } = this.state;
+    const { decks, edit_mode } = this.state;
     return (
       <Container>
         <Header>
-          {!select ? (
-            <Left />
-          ) : (
+          {!edit_mode ? (
             <Left>
-              <Button
-                transparent
-                onPress={selected.length != 0 ? this.trashSelected : null}
-                disabled={selected.length == 0}
-              >
-                <Text>Delete</Text>
+              <Button transparent onPress={this.addDeck}>
+                <Icon name="add" style={{ fontSize: 35 }} />
               </Button>
             </Left>
+          ) : (
+            <Left />
           )}
           <Body>
             <Title>Decks</Title>
           </Body>
-          {!select ? (
+          {!edit_mode ? (
             <Right>
-              <Button transparent onPress={this.addDeck}>
-                <Icon name="add" style={{ fontSize: 30 }} />
-              </Button>
-              <Button transparent onPress={this.onPressSelectButton}>
-                <Icon name="ios-checkmark-circle-outline" style={{ fontSize: 30 }} />
+              <Button transparent onPress={this.onPressEditButton}>
+                <Text>Edit</Text>
               </Button>
             </Right>
           ) : (
@@ -104,9 +85,8 @@ export default class Decks extends Component {
               <DeckListItem
                 deck={deck}
                 key={deck}
-                select={select}
-                selected={selected}
-                onSelect={this.onPressItemSelected}
+                edit_mode={edit_mode}
+                removeDeck={this.removeDeck}
               />
             ))}
           </List>
@@ -116,27 +96,27 @@ export default class Decks extends Component {
   }
 }
 
-const DeckListItem = ({ deck, select, selected, onSelect }) => (
-  <View>
-    {!select ? (
+const DeckListItem = ({ deck, edit_mode, removeDeck }) => (
+    !edit_mode ? (
       <ListItem>
         <Left>
           <Text>{deck}</Text>
         </Left>
         <Right>
-          <Icon name="arrow-forward" style={{ fontSize: 15 }} />
+          <Icon name="ios-arrow-forward" style={{fontSize: 20}}/>
         </Right>
       </ListItem>
     ) : (
-      <ListItem
-        onPress={e => onSelect(deck)}
-        selected={selected.includes(deck)}
-      >
-        <CheckBox checked={selected.includes(deck)} />
-        <Body>
+      <ListItem>
+        <Left>
+          <Icon
+            name="ios-remove-circle"
+            style={{ color: "red" }}
+            onPress={() => removeDeck(deck)}
+          />
           <Text>{deck}</Text>
-        </Body>
+        </Left>
+        <Right />
       </ListItem>
-    )}
-  </View>
+    )
 );
