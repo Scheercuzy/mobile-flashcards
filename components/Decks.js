@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Alert, View } from "react-native";
+import { Alert } from "react-native";
 import {
   Container,
   Header,
@@ -55,7 +55,7 @@ export default class Decks extends Component {
         <Header>
           {!edit_mode ? (
             <Left>
-              <Button transparent onPress={this.addDeck}>
+              <Button transparent onPress={() => this.props.navigation.navigate('AddDeck')}>
                 <Icon name="add" style={{ fontSize: 35 }} />
               </Button>
             </Left>

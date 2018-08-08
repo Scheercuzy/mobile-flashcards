@@ -1,16 +1,14 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
+import { createStackNavigator } from 'react-navigation';
+
 import Decks from './components/Decks'
+import AddDeck from './components/AddDeck'
 
 export default class App extends React.Component {
   render() {
     return (
-      <Decks />
-      // <View style={styles.container}>
-      //   <Text>Open up App.js to start working on your app!</Text>
-      //   <Text>Changes you make will automatically reload.</Text>
-      //   <Text>Shake your phone to open the developer menu.</Text>
-      // </View>
+      <StackNavigator />
     );
   }
 }
@@ -23,3 +21,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+const StackNavigator = createStackNavigator({
+  Decks: Decks,
+  AddDeck: AddDeck
+  },
+  {
+    navigationOptions: {
+      header: null
+    }
+  }
+);
