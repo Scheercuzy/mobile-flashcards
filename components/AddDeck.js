@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Alert } from "react-native";
+import { connect } from "react-redux";
 import {
   Container,
   Header,
@@ -16,17 +16,20 @@ import {
   Input
 } from "native-base";
 
-class AddDeck extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            name: null
-        }
-    }
+import { addDeck } from "./store/actions/deck";
 
-    onSave = () => {
-        Alert.alert(this.state.name)
-    }
+class AddDeck extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: null
+    };
+  }
+
+  onSave = () => {
+    this.props.onSave(this.state.name);
+    this.props.navigation.navigate("Decks");
+  };
 
   render() {
     return (
@@ -41,16 +44,19 @@ class AddDeck extends Component {
             <Title>Add Deck</Title>
           </Body>
           <Right>
-              <Button transparent onPress={this.onSave}>
-                <Text>Save</Text>
-              </Button>
-            </Right>
+            <Button transparent onPress={this.onSave}>
+              <Text>Save</Text>
+            </Button>
+          </Right>
         </Header>
         <Content>
           <Form>
             <Item stackedLabel last>
               <Label>Deck Name</Label>
-              <Input onChangeText={(name) => this.setState({name})} value={this.state.name}/>
+              <Input
+                onChangeText={name => this.setState({ name })}
+                value={this.state.name}
+              />
             </Item>
           </Form>
         </Content>
@@ -59,4 +65,13 @@ class AddDeck extends Component {
   }
 }
 
-export default AddDeck;
+function mapDispatchToProps(dispatch) {
+  return {
+    onSave: name => dispatch(addDeck({name}))
+  };
+}
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(AddDeck);

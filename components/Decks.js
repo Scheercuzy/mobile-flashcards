@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Alert } from "react-native";
+import { connect } from 'react-redux'
 import {
   Container,
   Header,
@@ -15,11 +16,12 @@ import {
   Icon
 } from "native-base";
 
-export default class Decks extends Component {
+import { deleteDeck } from "./store/actions/deck";
+
+class Decks extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      decks: ["Deck 1", "Deck 2", "Deck 3"],
       edit_mode: false
     };
   }
@@ -40,16 +42,20 @@ export default class Decks extends Component {
     });
   };
 
-  removeDeck = deck => {
-    Alert.alert(`Are you sure you want to remove ${deck}`);
-  };
-
-  addDeck = () => {
-    Alert.alert("Add deck");
+  deleteDeck = deck => {
+    Alert.alert(
+      'Delete Deck?',
+      `Are you sure you want to remove ${deck}`,
+      [
+        {text: 'NO', style: 'cancel'},
+        {text: 'YES', onPress: () => this.props.deleteDeck(deck)},
+      ]
+    );
   };
 
   render() {
-    const { decks, edit_mode } = this.state;
+    const { edit_mode } = this.state;
+    const { decks } = this.props
     return (
       <Container>
         <Header>
@@ -81,12 +87,12 @@ export default class Decks extends Component {
         </Header>
         <Content>
           <List>
-            {decks.map(deck => (
+            {decks && Object.keys(decks).map(deck => (
               <DeckListItem
                 deck={deck}
                 key={deck}
                 edit_mode={edit_mode}
-                removeDeck={this.removeDeck}
+                deleteDeck={this.deleteDeck}
               />
             ))}
           </List>
@@ -96,7 +102,7 @@ export default class Decks extends Component {
   }
 }
 
-const DeckListItem = ({ deck, edit_mode, removeDeck }) => (
+const DeckListItem = ({ deck, edit_mode, deleteDeck }) => (
     !edit_mode ? (
       <ListItem>
         <Left>
@@ -112,7 +118,7 @@ const DeckListItem = ({ deck, edit_mode, removeDeck }) => (
           <Icon
             name="ios-remove-circle"
             style={{ color: "red" }}
-            onPress={() => removeDeck(deck)}
+            onPress={() => deleteDeck(deck)}
           />
           <Text>{deck}</Text>
         </Left>
@@ -120,3 +126,17 @@ const DeckListItem = ({ deck, edit_mode, removeDeck }) => (
       </ListItem>
     )
 );
+
+const mapStateToProps = (state) => {
+  return {
+    decks: state.decks
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    deleteDeck : name => dispatch(deleteDeck(name))
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Decks)
