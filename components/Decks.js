@@ -94,12 +94,12 @@ class Decks extends Component {
         <Content>
           <List>
             {decks && Object.keys(decks).map(deck => (
-              <DeckListItem
-                deck={deck}
+              <RemovableListItem
+                item={deck}
                 key={deck}
                 edit_mode={edit_mode}
-                deleteDeck={this.deleteDeck}
-                navigateToDeck={this.navigateToDeck}
+                deleteItem={this.deleteDeck}
+                navigateTo={this.navigateToDeck}
               />
             ))}
           </List>
@@ -109,11 +109,11 @@ class Decks extends Component {
   }
 }
 
-const DeckListItem = ({ deck, edit_mode, deleteDeck, navigateToDeck }) => (
+const RemovableListItem = ({ item, edit_mode, deleteItem, navigateTo }) => (
     !edit_mode ? (
-      <ListItem onPress={() => navigateToDeck(deck)}>
+      <ListItem onPress={() => navigateTo(item)}>
         <Left>
-          <Text>{deck}</Text>
+          <Text>{item}</Text>
         </Left>
         <Right>
           <Icon name="ios-arrow-forward" style={{fontSize: 20}}/>
@@ -125,9 +125,9 @@ const DeckListItem = ({ deck, edit_mode, deleteDeck, navigateToDeck }) => (
           <Icon
             name="ios-remove-circle"
             style={{ color: "red" }}
-            onPress={() => deleteDeck(deck)}
+            onPress={() => deleteItem(item)}
           />
-          <Text>{deck}</Text>
+          <Text>{item}</Text>
         </Left>
         <Right />
       </ListItem>

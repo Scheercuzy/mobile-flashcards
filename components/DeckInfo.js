@@ -49,7 +49,7 @@ class DeckInfo extends Component {
 const mapStateToProps = state => {
   return {
     selected: state.selected,
-    decks: state.decks
+    deck: state.decks[state.selected]
   };
 };
 
