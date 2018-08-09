@@ -16,7 +16,7 @@ import {
   Input
 } from "native-base";
 
-import { addDeck } from "./store/actions/deck";
+import { addDeck } from "./store/actions/decks";
 
 class AddDeck extends Component {
   constructor(props) {
@@ -67,7 +67,7 @@ class AddDeck extends Component {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onSave: name => dispatch(addDeck({name}))
+    onSave: name => dispatch(addDeck(name))
   };
 }
 

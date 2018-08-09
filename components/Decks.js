@@ -16,7 +16,8 @@ import {
   Icon
 } from "native-base";
 
-import { deleteDeck } from "./store/actions/deck";
+import { deleteDeck } from "./store/actions/decks";
+import { selectDeck } from "./store/actions/selected";
 
 class Decks extends Component {
   constructor(props) {
@@ -52,6 +53,11 @@ class Decks extends Component {
       ]
     );
   };
+
+  navigateToDeck = deck => {
+    this.props.selectDeck(deck)
+    this.props.navigation.navigate('TabNav')
+  }
 
   render() {
     const { edit_mode } = this.state;
@@ -93,6 +99,7 @@ class Decks extends Component {
                 key={deck}
                 edit_mode={edit_mode}
                 deleteDeck={this.deleteDeck}
+                navigateToDeck={this.navigateToDeck}
               />
             ))}
           </List>
@@ -102,9 +109,9 @@ class Decks extends Component {
   }
 }
 
-const DeckListItem = ({ deck, edit_mode, deleteDeck }) => (
+const DeckListItem = ({ deck, edit_mode, deleteDeck, navigateToDeck }) => (
     !edit_mode ? (
-      <ListItem>
+      <ListItem onPress={() => navigateToDeck(deck)}>
         <Left>
           <Text>{deck}</Text>
         </Left>
@@ -135,7 +142,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    deleteDeck : name => dispatch(deleteDeck(name))
+    deleteDeck : name => dispatch(deleteDeck(name)),
+    selectDeck : name => dispatch(selectDeck(name))
   };
 }
 
