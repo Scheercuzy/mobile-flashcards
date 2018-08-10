@@ -3,7 +3,7 @@ import {
   createStackNavigator,
   createBottomTabNavigator
 } from "react-navigation";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 
 import Decks from "./Decks";
 import DeckForm from "./forms/DeckForm";
@@ -27,9 +27,9 @@ const TabNav = createBottomTabNavigator({
   DeckInfo: {
     screen: DeckInfo,
     navigationOptions: {
-      tabBarLabel: "Deck Info",
+      tabBarLabel: "Deck",
       tabBarIcon: ({ focused, tintColor }) => (
-        <Ionicons name="ios-alert" color={tintColor} style={{ fontSize: 30 }} />
+        <Ionicons name="ios-information-circle" color={tintColor} style={{ fontSize: 30 }} />
       )
     }
   },
@@ -38,8 +38,8 @@ const TabNav = createBottomTabNavigator({
     navigationOptions: {
       tabBarLabel: "Cards",
       tabBarIcon: ({ focused, tintColor }) => (
-        <Ionicons
-          name="ios-albums"
+        <MaterialCommunityIcons
+          name="cards"
           color={tintColor}
           style={{ fontSize: 30 }}
         />

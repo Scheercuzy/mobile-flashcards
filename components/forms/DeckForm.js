@@ -47,6 +47,7 @@ class AddDeck extends Component {
   };
 
   render() {
+    const { edit } = this.state
     return (
       <Container>
         <Header>
@@ -56,7 +57,7 @@ class AddDeck extends Component {
             </Button>
           </Left>
           <Body>
-            <Title>Add Deck</Title>
+            <Title>{edit ? 'Edit Deck' : 'Add Deck'}</Title>
           </Body>
           <Right>
             <Button transparent onPress={this.onSave}>

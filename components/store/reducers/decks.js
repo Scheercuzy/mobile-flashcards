@@ -17,7 +17,8 @@ export default function decks(state = [], action) {
         {
           id: id,
           name: action.name,
-          cards: []
+          cards: [],
+          dateCreated: Date.now()
         }
       ];
     case DELETE_DECK:

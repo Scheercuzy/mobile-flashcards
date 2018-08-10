@@ -51,6 +51,7 @@ class CardForm extends Component {
   };
 
   render() {
+    const { edit } = this.state
     return (
       <Container>
         <Header>
@@ -60,7 +61,7 @@ class CardForm extends Component {
             </Button>
           </Left>
           <Body>
-            <Title>Add Card</Title>
+            <Title>{edit ? 'Edit Card' : 'Add Card'}</Title>
           </Body>
           <Right>
             <Button transparent onPress={this.onSave}>

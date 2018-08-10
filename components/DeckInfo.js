@@ -10,10 +10,11 @@ import {
   Text,
   Button,
   Icon,
-  Content
+  Content,
+  Card,
+  CardItem
 } from "native-base";
-
-import { unselectDeck } from "./store/actions/selected";
+import { Col, Row, Grid } from "react-native-easy-grid";
 
 class DeckInfo extends Component {
   static navigationOptions = {
@@ -22,11 +23,11 @@ class DeckInfo extends Component {
 
   onPressBack = () => {
     this.props.navigation.navigate("Decks");
-    this.props.unselectDeck();
   };
 
   render() {
-    const { deck } = this.props
+    const { deck } = this.props;
+    var deckCreatedDate = new Date(deck.dateCreated);
     return (
       <Container>
         <Header>
@@ -39,9 +40,34 @@ class DeckInfo extends Component {
           <Body>
             <Title>{deck.name}</Title>
           </Body>
-          <Right />
+          <Right>
+            <Button transparent onPress={() => alert('WIP :)')}>
+              <Text>Start Quiz</Text>
+            </Button>
+          </Right>
         </Header>
-        <Content />
+        <Content padder>
+          <Card>
+            <CardItem bordered>
+              <Text>Date Created</Text>
+            </CardItem>
+            <CardItem>
+              <Body>
+                <Text>{deckCreatedDate.toLocaleDateString()}</Text>
+              </Body>
+            </CardItem>
+          </Card>
+          <Card>
+            <CardItem bordered>
+              <Text>Number of Cards</Text>
+            </CardItem>
+            <CardItem>
+              <Body>
+                <Text>{deck.cards.length}</Text>
+              </Body>
+            </CardItem>
+          </Card>
+        </Content>
       </Container>
     );
   }
@@ -50,17 +76,8 @@ class DeckInfo extends Component {
 const mapStateToProps = state => {
   return {
     selected: state.selected,
-    deck: state.decks.filter(deck => deck.id == state.selected)[0] || []
+    deck: state.decks.filter(deck => deck.id == state.selected)[0]
   };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    unselectDeck: () => dispatch(unselectDeck())
-  };
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(DeckInfo);
+export default connect(mapStateToProps)(DeckInfo);
