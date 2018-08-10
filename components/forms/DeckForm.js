@@ -16,22 +16,34 @@ import {
   Input
 } from "native-base";
 
-import { addCard } from "./store/actions/decks";
+import { addDeck, updateDeck } from "../store/actions/decks";
 
-class AddCard extends Component {
+class AddDeck extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      question: null,
-      answer: null
-    };
+    if ("edit" in this.getNavigationParams()) {
+      this.state = {
+        name: this.getNavigationParams().deck.name,
+        edit: true,
+        deck: this.getNavigationParams().deck
+      };
+    } else {
+      this.state = {
+        name: null,
+        edit: false
+      };
+    }
+  }
+
+  getNavigationParams() {
+    return this.props.navigation.state.params || {};
   }
 
   onSave = () => {
-    const { selected } = this.props
-    const { question, answer } = this.state
-    this.props.onSave(selected, question, answer);
-    this.props.navigation.navigate("Cards");
+    !this.state.edit
+      ? this.props.onSaveNew(this.state.name)
+      : this.props.onSaveEdit(this.state.deck, this.state.name);
+    this.props.navigation.navigate("Decks");
   };
 
   render() {
@@ -44,7 +56,7 @@ class AddCard extends Component {
             </Button>
           </Left>
           <Body>
-            <Title>Add Card</Title>
+            <Title>Add Deck</Title>
           </Body>
           <Right>
             <Button transparent onPress={this.onSave}>
@@ -54,18 +66,11 @@ class AddCard extends Component {
         </Header>
         <Content>
           <Form>
-            <Item stackedLabel>
-              <Label>Question</Label>
-              <Input
-                onChangeText={question => this.setState({ question })}
-                value={this.state.question}
-              />
-            </Item>
             <Item stackedLabel last>
-              <Label>Answer</Label>
+              <Label>Deck Name</Label>
               <Input
-                onChangeText={answer => this.setState({ answer })}
-                value={this.state.answer}
+                onChangeText={name => this.setState({ name })}
+                value={this.state.name}
               />
             </Item>
           </Form>
@@ -75,19 +80,14 @@ class AddCard extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    selected: state.selected
-  };
-};
-
 function mapDispatchToProps(dispatch) {
   return {
-    onSave: (deck, question, answer) => dispatch(addCard(deck, question, answer))
+    onSaveNew: name => dispatch(addDeck(name)),
+    onSaveEdit: (deck, name) => dispatch(updateDeck(deck, name))
   };
 }
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps
-)(AddCard);
+)(AddDeck);

@@ -13,34 +13,34 @@ export function addDeck(name) {
   };
 }
 
-export function deleteDeck(name) {
+export function deleteDeck(deck) {
   return {
     type: DELETE_DECK,
-    name
+    deck
   };
 }
 
-export function updateDeck(old_name, name) {
+export function updateDeck(deck, name) {
   return {
     type: UPDATE_DECK,
-    old_name,
+    deck,
     name
   };
 }
 
-export function addCard(deck, question, answer) {
+export function addCard(deckId, question, answer) {
   return {
     type: ADD_CARD,
-    deck,
+    deckId,
     question,
     answer
   };
 }
 
-export function deleteCards(deck, cardList) {
+export function deleteCards(deckId, cardList) {
   return {
     type: DELETE_CARDS,
-    deck,
+    deckId,
     cardList
   };
 }

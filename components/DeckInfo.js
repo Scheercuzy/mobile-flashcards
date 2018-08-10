@@ -26,6 +26,7 @@ class DeckInfo extends Component {
   };
 
   render() {
+    const { deck } = this.props
     return (
       <Container>
         <Header>
@@ -36,7 +37,7 @@ class DeckInfo extends Component {
             </Button>
           </Left>
           <Body>
-            <Title>{this.props.selected}</Title>
+            <Title>{deck.name}</Title>
           </Body>
           <Right />
         </Header>
@@ -49,7 +50,7 @@ class DeckInfo extends Component {
 const mapStateToProps = state => {
   return {
     selected: state.selected,
-    deck: state.decks[state.selected]
+    deck: state.decks.filter(deck => deck.id == state.selected)[0] || []
   };
 };
 

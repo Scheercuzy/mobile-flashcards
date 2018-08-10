@@ -5,43 +5,63 @@ import {
   ADD_CARD,
   DELETE_CARDS
 } from "../actions/actionTypes";
+import { createAndCheckID5 } from "../../utils";
 
-export default function decks(state = {}, action) {
+export default function decks(state = [], action) {
   switch (action.type) {
     case ADD_DECK:
-      return {
+      const id = createAndCheckID5(state);
+      return [
         ...state,
-        [action.name]: {
+        {
+          id: id,
+          name: action.name,
           cards: []
         }
-      };
+      ];
     case DELETE_DECK:
-      decksData = Object.assign(state);
-      delete decksData[action.name];
-      return { ...decksData };
-    case UPDATE_DECK: // NOTE Add option to rename/edit deck
-      return state;
+      return Object.assign([], state).filter(deck => deck != action.deck);
+    case UPDATE_DECK:
+      const data = Object.assign([], state).filter(deck => deck != action.deck);
+      return [
+        ...data,
+        {
+          ...action.deck,
+          name: action.name
+        }
+      ];
     case ADD_CARD:
-      return {
-        ...state,
-        [action.deck]: {
-          ...state[action.deck],
+      deckData = Object.assign([], state).filter(
+        deck => deck.id == action.deckId
+      )[0];
+      const newId = createAndCheckID5(state.cards);
+      return [
+        ...state.filter(deck => deck.id != action.deckId),
+        {
+          ...deckData,
           cards: [
-            ...state[action.deck].cards,
-            { question: action.question, answer: action.answer }
+            ...deckData.cards,
+            {
+              question: action.question,
+              answer: action.answer,
+              id: newId
+            }
           ]
         }
-      };
+      ];
     case DELETE_CARDS:
-      return {
-        ...state,
-        [action.deck]: {
-          ...state[action.deck],
+      deckData = Object.assign([], state).filter(
+        deck => deck.id == action.deckId
+      )[0];
+      return [
+        ...state.filter(deck => deck.id != action.deckId),
+        {
+          ...deckData,
           cards: [
-            ...state[action.deck].cards.filter(card => !action.cardList.includes(card))
+            ...deckData.cards.filter(card => !action.cardList.includes(card))
           ]
         }
-      };
+      ];
     default:
       return state;
   }

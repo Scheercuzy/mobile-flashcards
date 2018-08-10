@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { Alert } from "react-native";
-import { connect } from 'react-redux'
+import { Alert, AsyncStorage } from "react-native";
+import { connect } from "react-redux";
 import {
   Container,
   Header,
@@ -27,7 +27,7 @@ class Decks extends Component {
     };
   }
 
-  onPressEditButton = () => {
+  onPressHeaderEditButton = () => {
     this.setState(prevState => {
       return Object.assign(prevState, {
         edit_mode: true
@@ -35,7 +35,7 @@ class Decks extends Component {
     });
   };
 
-  onPressCancelButton = () => {
+  onPressHeaderCancelButton = () => {
     this.setState(prevState => {
       return Object.assign(prevState, {
         edit_mode: false
@@ -44,30 +44,34 @@ class Decks extends Component {
   };
 
   deleteDeck = deck => {
-    Alert.alert(
-      'Delete Deck?',
-      `Are you sure you want to remove ${deck}`,
-      [
-        {text: 'NO', style: 'cancel'},
-        {text: 'YES', onPress: () => this.props.deleteDeck(deck)},
-      ]
-    );
+    Alert.alert("Delete Deck?", `Are you sure you want to remove ${deck.name}`, [
+      { text: "NO", style: "cancel" },
+      { text: "YES", onPress: () => this.props.deleteDeck(deck) }
+    ]);
   };
 
-  navigateToDeck = deck => {
-    this.props.selectDeck(deck)
-    this.props.navigation.navigate('TabNav')
+  editDeck = deck => {
+    this.props.navigation.navigate("DeckForm", {edit: true, deck: deck})
   }
+
+  navigateToDeck = deck => {
+    this.props.selectDeck(deck.id);
+    this.props.navigation.navigate("TabNav");
+  };
 
   render() {
     const { edit_mode } = this.state;
-    const { decks } = this.props
+    const { decks } = this.props;
+    console.log(this.props)
     return (
       <Container>
         <Header>
           {!edit_mode ? (
             <Left>
-              <Button transparent onPress={() => this.props.navigation.navigate('AddDeck')}>
+              <Button
+                transparent
+                onPress={() => this.props.navigation.navigate("DeckForm")}
+              >
                 <Icon name="add" style={{ fontSize: 35 }} />
               </Button>
             </Left>
@@ -79,13 +83,13 @@ class Decks extends Component {
           </Body>
           {!edit_mode ? (
             <Right>
-              <Button transparent onPress={this.onPressEditButton}>
+              <Button transparent onPress={this.onPressHeaderEditButton}>
                 <Text>Edit</Text>
               </Button>
             </Right>
           ) : (
             <Right>
-              <Button transparent onPress={this.onPressCancelButton}>
+              <Button transparent onPress={this.onPressHeaderCancelButton}>
                 <Text>Cancel</Text>
               </Button>
             </Right>
@@ -93,15 +97,17 @@ class Decks extends Component {
         </Header>
         <Content>
           <List>
-            {decks && Object.keys(decks).map(deck => (
-              <RemovableListItem
-                item={deck}
-                key={deck}
-                edit_mode={edit_mode}
-                deleteItem={this.deleteDeck}
-                navigateTo={this.navigateToDeck}
-              />
-            ))}
+            {decks &&
+              decks.map(deck => (
+                <RemovableListItem
+                  item={deck}
+                  key={deck.id}
+                  edit_mode={edit_mode}
+                  deleteItem={this.deleteDeck}
+                  editItem={this.editDeck}
+                  navigateTo={this.navigateToDeck}
+                />
+              ))}
           </List>
         </Content>
       </Container>
@@ -109,42 +115,48 @@ class Decks extends Component {
   }
 }
 
-const RemovableListItem = ({ item, edit_mode, deleteItem, navigateTo }) => (
-    !edit_mode ? (
-      <ListItem onPress={() => navigateTo(item)}>
-        <Left>
-          <Text>{item}</Text>
-        </Left>
-        <Right>
-          <Icon name="ios-arrow-forward" style={{fontSize: 20}}/>
-        </Right>
-      </ListItem>
-    ) : (
-      <ListItem>
-        <Left>
-          <Icon
-            name="ios-remove-circle"
-            style={{ color: "red" }}
-            onPress={() => deleteItem(item)}
-          />
-          <Text>{item}</Text>
-        </Left>
-        <Right />
-      </ListItem>
-    )
-);
+const RemovableListItem = ({ item, edit_mode, deleteItem, editItem, navigateTo }) =>
+  !edit_mode ? (
+    <ListItem onPress={() => navigateTo(item)} style={{ height: 100 }}>
+      <Left>
+        <Text>{item.name}</Text>
+      </Left>
+      <Right>
+        <Icon name="ios-arrow-forward" style={{ fontSize: 20 }} />
+      </Right>
+    </ListItem>
+  ) : (
+    <ListItem style={{ height: 100 }}>
+      <Left>
+        <Icon
+          name="ios-remove-circle"
+          style={{ color: "red" , fontSize: 20}}
+          onPress={() => deleteItem(item)}
+        />
+        <Text>{item.name}</Text>
+      </Left>
+      <Right>
+        <Button transparent onPress={() => editItem(item)}>
+          <Text>Edit</Text>
+        </Button>
+      </Right>
+    </ListItem>
+  );
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     decks: state.decks
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    deleteDeck : name => dispatch(deleteDeck(name)),
-    selectDeck : name => dispatch(selectDeck(name))
   };
-}
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(Decks)
+const mapDispatchToProps = dispatch => {
+  return {
+    deleteDeck: deck => dispatch(deleteDeck(deck)),
+    selectDeck: id => dispatch(selectDeck(id)),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Decks);

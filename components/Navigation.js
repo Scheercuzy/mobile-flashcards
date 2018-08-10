@@ -6,15 +6,15 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 
 import Decks from "./Decks";
-import AddDeck from "./AddDeck";
+import DeckForm from "./forms/DeckForm";
 import DeckInfo from "./DeckInfo";
 import Cards from "./Cards";
-import AddCard from "./AddCard";
+import CardForm from "./forms/CardForm";
 
 const CardStackNav = createStackNavigator(
   {
     Cards: Cards,
-    AddCard: AddCard
+    CardForm: CardForm
   },
   {
     navigationOptions: {
@@ -51,7 +51,7 @@ const TabNav = createBottomTabNavigator({
 export default (AppNav = createStackNavigator(
   {
     Decks: Decks,
-    AddDeck: AddDeck,
+    DeckForm: DeckForm,
     TabNav: TabNav
   },
   {

@@ -16,19 +16,22 @@ import {
   Input
 } from "native-base";
 
-import { addDeck } from "./store/actions/decks";
+import { addCard } from "../store/actions/decks";
 
-class AddDeck extends Component {
+class CardForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: null
+      question: null,
+      answer: null
     };
   }
 
   onSave = () => {
-    this.props.onSave(this.state.name);
-    this.props.navigation.navigate("Decks");
+    const { selected } = this.props
+    const { question, answer } = this.state
+    this.props.onSave(selected, question, answer);
+    this.props.navigation.navigate("Cards");
   };
 
   render() {
@@ -41,7 +44,7 @@ class AddDeck extends Component {
             </Button>
           </Left>
           <Body>
-            <Title>Add Deck</Title>
+            <Title>Add Card</Title>
           </Body>
           <Right>
             <Button transparent onPress={this.onSave}>
@@ -51,11 +54,18 @@ class AddDeck extends Component {
         </Header>
         <Content>
           <Form>
-            <Item stackedLabel last>
-              <Label>Deck Name</Label>
+            <Item stackedLabel>
+              <Label>Question</Label>
               <Input
-                onChangeText={name => this.setState({ name })}
-                value={this.state.name}
+                onChangeText={question => this.setState({ question })}
+                value={this.state.question}
+              />
+            </Item>
+            <Item stackedLabel last>
+              <Label>Answer</Label>
+              <Input
+                onChangeText={answer => this.setState({ answer })}
+                value={this.state.answer}
               />
             </Item>
           </Form>
@@ -65,13 +75,19 @@ class AddDeck extends Component {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    selected: state.selected
+  };
+};
+
 function mapDispatchToProps(dispatch) {
   return {
-    onSave: name => dispatch(addDeck(name))
+    onSave: (selected, question, answer) => dispatch(addCard(selected, question, answer))
   };
 }
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
-)(AddDeck);
+)(CardForm);

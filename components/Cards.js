@@ -9,7 +9,6 @@ import {
   Right,
   Title,
   Content,
-  List,
   ListItem,
   Text,
   Button,
@@ -89,14 +88,18 @@ class Cards extends Component {
             <Left>
               <Button
                 transparent
-                onPress={() => this.props.navigation.navigate("AddCard")}
+                onPress={() => this.props.navigation.navigate("CardForm")}
               >
                 <Icon name="add" style={{ fontSize: 35 }} />
               </Button>
             </Left>
           ) : (
             <Left>
-              <Button transparent onPress={this.onPressDelete} disabled={selectedCards.length == 0}>
+              <Button
+                transparent
+                onPress={this.onPressDelete}
+                disabled={selectedCards.length == 0}
+              >
                 <Text>Delete</Text>
               </Button>
             </Left>
@@ -144,7 +147,7 @@ const SelectableListItem = ({
   selected
 }) =>
   !edit_mode ? (
-    <ListItem onPress={() => navigateTo(item)}>
+    <ListItem onPress={() => navigateTo(item)} style={{ height: 50 }}>
       <Left>
         <Text>{item.question}</Text>
       </Left>
@@ -153,8 +156,8 @@ const SelectableListItem = ({
       </Right>
     </ListItem>
   ) : (
-    <ListItem onPress={() => itemSelected(item)}>
-      <CheckBox checked={selected} />
+    <ListItem style={{ height: 50 }}>
+      <CheckBox onPress={() => itemSelected(item)} checked={selected} />
       <Body>
         <Text>{item.question}</Text>
       </Body>
@@ -164,8 +167,8 @@ const SelectableListItem = ({
 const mapStateToProps = state => {
   return {
     selected: state.selected,
-    deck: state.decks[state.selected],
-    cards: state.decks[state.selected]["cards"]
+    deck: state.decks.filter(deck => deck.id == state.selected)[0],
+    cards: state.decks.filter(deck => deck.id == state.selected)[0]["cards"]
   };
 };
 
