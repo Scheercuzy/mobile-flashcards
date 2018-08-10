@@ -3,7 +3,8 @@ import {
   DELETE_DECK,
   UPDATE_DECK,
   ADD_CARD,
-  DELETE_CARDS
+  DELETE_CARDS,
+  UPDATE_CARD
 } from "./actionTypes";
 
 export function addDeck(name) {
@@ -43,4 +44,15 @@ export function deleteCards(deckId, cardList) {
     deckId,
     cardList
   };
+}
+
+
+export function updateCard(deckId, card, question, answer) {
+  return {
+    type: UPDATE_CARD,
+    deckId,
+    card,
+    question, 
+    answer
+  }
 }

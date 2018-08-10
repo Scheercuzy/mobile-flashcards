@@ -3,7 +3,8 @@ import {
   DELETE_DECK,
   UPDATE_DECK,
   ADD_CARD,
-  DELETE_CARDS
+  DELETE_CARDS,
+  UPDATE_CARD
 } from "../actions/actionTypes";
 import { createAndCheckID5 } from "../../utils";
 
@@ -22,9 +23,8 @@ export default function decks(state = [], action) {
     case DELETE_DECK:
       return Object.assign([], state).filter(deck => deck != action.deck);
     case UPDATE_DECK:
-      const data = Object.assign([], state).filter(deck => deck != action.deck);
       return [
-        ...data,
+        ...state.filter(deck => deck != action.deck),
         {
           ...action.deck,
           name: action.name
@@ -62,6 +62,24 @@ export default function decks(state = [], action) {
           ]
         }
       ];
+    case UPDATE_CARD:
+      deckData = Object.assign([], state).filter(
+        deck => deck.id == action.deckId
+      )[0];
+      return [
+        ...state.filter(deck => deck.id != action.deckId),
+        {
+          ...deckData,
+          cards: [
+            ...deckData.cards.filter(card => card != action.card),
+            {
+              ...deckData.cards.filter(card => card == action.card)[0],
+              question: action.question,
+              answer: action.answer
+            }
+          ]
+        }
+      ]
     default:
       return state;
   }

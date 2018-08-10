@@ -120,6 +120,7 @@ const RemovableListItem = ({ item, edit_mode, deleteItem, editItem, navigateTo }
     <ListItem onPress={() => navigateTo(item)} style={{ height: 100 }}>
       <Left>
         <Text>{item.name}</Text>
+        <Text style={{ color: 'grey'}}> ({item.cards.length} Cards)</Text>
       </Left>
       <Right>
         <Icon name="ios-arrow-forward" style={{ fontSize: 20 }} />

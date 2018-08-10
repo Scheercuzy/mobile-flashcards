@@ -44,8 +44,7 @@ class Cards extends Component {
   };
 
   navigateToCard = card => {
-    alert(`card selected ${card.question}`);
-    // NOTE Add navigation for Cards
+    this.props.navigation.navigate("CardForm", {edit: true, card: card})
   };
 
   onSelectedCard = card => {
@@ -174,7 +173,7 @@ const mapStateToProps = state => {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onDeleteCards: (deck, cardList) => dispatch(deleteCards(deck, cardList))
+    onDeleteCards: (deck, cardList) => dispatch(deleteCards(deck, cardList)),
   };
 }
 

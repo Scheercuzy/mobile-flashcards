@@ -16,21 +16,37 @@ import {
   Input
 } from "native-base";
 
-import { addCard } from "../store/actions/decks";
+import { addCard, updateCard } from "../store/actions/decks";
 
 class CardForm extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      question: null,
-      answer: null
-    };
+    if ("edit" in this.getNavigationParams()) {
+      this.state = {
+        question: this.getNavigationParams().card.question,
+        answer: this.getNavigationParams().card.answer,
+        edit: true,
+        card: this.getNavigationParams().card
+      };
+    } else {
+      this.state = {
+        question: null,
+        answer: null,
+        edit: false
+      };
+    }
+  }
+
+  getNavigationParams() {
+    return this.props.navigation.state.params || {};
   }
 
   onSave = () => {
-    const { selected } = this.props
-    const { question, answer } = this.state
-    this.props.onSave(selected, question, answer);
+    const { selected } = this.props;
+    const { question, answer, card } = this.state;
+    !this.state.edit
+      ? this.props.onSaveNew(selected, question, answer)
+      : this.props.onSaveEdit(selected, card, question, answer);
     this.props.navigation.navigate("Cards");
   };
 
@@ -83,7 +99,10 @@ const mapStateToProps = state => {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onSave: (selected, question, answer) => dispatch(addCard(selected, question, answer))
+    onSaveNew: (selected, question, answer) =>
+      dispatch(addCard(selected, question, answer)),
+    onSaveEdit: (selected, card, question, answer) =>
+      dispatch(updateCard(selected, card, question, answer))
   };
 }
 
