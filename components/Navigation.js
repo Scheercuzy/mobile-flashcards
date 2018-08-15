@@ -10,6 +10,7 @@ import DeckForm from "./forms/DeckForm";
 import DeckInfo from "./DeckInfo";
 import Cards from "./Cards";
 import CardForm from "./forms/CardForm";
+import Quiz from "./Quiz";
 
 const CardStackNav = createStackNavigator(
   {
@@ -29,7 +30,11 @@ const TabNav = createBottomTabNavigator({
     navigationOptions: {
       tabBarLabel: "Deck",
       tabBarIcon: ({ focused, tintColor }) => (
-        <Ionicons name="ios-information-circle" color={tintColor} style={{ fontSize: 30 }} />
+        <Ionicons
+          name="ios-information-circle"
+          color={tintColor}
+          style={{ fontSize: 30 }}
+        />
       )
     }
   },
@@ -48,11 +53,23 @@ const TabNav = createBottomTabNavigator({
   }
 });
 
+const DeckInfoNav = createStackNavigator(
+  {
+    Home: TabNav,
+    Quiz: Quiz
+  },
+  {
+    navigationOptions: {
+      header: null
+    }
+  }
+);
+
 export default (AppNav = createStackNavigator(
   {
     Decks: Decks,
     DeckForm: DeckForm,
-    TabNav: TabNav
+    DeckInfo: DeckInfoNav
   },
   {
     navigationOptions: {

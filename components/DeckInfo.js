@@ -41,7 +41,11 @@ class DeckInfo extends Component {
             <Title>{deck.name}</Title>
           </Body>
           <Right>
-            <Button transparent onPress={() => alert('WIP :)')}>
+            <Button
+              transparent
+              onPress={() => this.props.navigation.navigate("Quiz")}
+              disabled={deck.cards.length == 0}
+            >
               <Text>Start Quiz</Text>
             </Button>
           </Right>

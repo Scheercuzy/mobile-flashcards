@@ -46,13 +46,12 @@ export function deleteCards(deckId, cardList) {
   };
 }
 
-
 export function updateCard(deckId, card, question, answer) {
   return {
     type: UPDATE_CARD,
     deckId,
     card,
-    question, 
+    question,
     answer
-  }
+  };
 }

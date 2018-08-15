@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Alert, AsyncStorage } from "react-native";
+import { Alert } from "react-native";
 import { connect } from "react-redux";
 import {
   Container,
@@ -56,13 +56,12 @@ class Decks extends Component {
 
   navigateToDeck = deck => {
     this.props.selectDeck(deck.id);
-    this.props.navigation.navigate("TabNav");
+    this.props.navigation.navigate("DeckInfo");
   };
 
   render() {
     const { edit_mode } = this.state;
     const { decks } = this.props;
-    console.log(this.props)
     return (
       <Container>
         <Header>
