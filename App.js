@@ -1,13 +1,17 @@
 import React from "react";
 import { StyleSheet } from "react-native";
 import { PersistGate } from "redux-persist/integration/react";
-import { Provider } from 'react-redux'
-import { AppLoading } from 'expo';
+import { Provider } from "react-redux";
+import { AppLoading } from "expo";
 
 import { store, persistor } from "./components/store";
-import AppNav from './components/Navigation'
+import AppNav from "./components/Navigation";
+import { setLocalNotification } from "./components/utils/helpers";
 
 export default class App extends React.Component {
+  componentDidMount() {
+    setLocalNotification();
+  }
   render() {
     return (
       <Provider store={store}>

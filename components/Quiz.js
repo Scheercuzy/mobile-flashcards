@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Col, Row, Grid } from "react-native-easy-grid";
+import { Row, Grid } from "react-native-easy-grid";
 import {
   Container,
   Header,
@@ -8,12 +8,8 @@ import {
   Body,
   Right,
   Title,
-  Content,
-  List,
-  ListItem,
   Text,
   Button,
-  Icon,
   Card,
   CardItem
 } from "native-base";

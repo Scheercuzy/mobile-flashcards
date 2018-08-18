@@ -14,7 +14,8 @@ import {
   Card,
   CardItem
 } from "native-base";
-import { Col, Row, Grid } from "react-native-easy-grid";
+
+import { clearLocalNotification, setLocalNotification } from "./utils/helpers";
 
 class DeckInfo extends Component {
   static navigationOptions = {
@@ -23,6 +24,11 @@ class DeckInfo extends Component {
 
   onPressBack = () => {
     this.props.navigation.navigate("Decks");
+  };
+
+  onPressStartQuiz = () => {
+    clearLocalNotification().then(setLocalNotification);
+    this.props.navigation.navigate("Quiz");
   };
 
   render() {
@@ -43,7 +49,7 @@ class DeckInfo extends Component {
           <Right>
             <Button
               transparent
-              onPress={() => this.props.navigation.navigate("Quiz")}
+              onPress={this.onPressStartQuiz}
               disabled={deck.cards.length == 0}
             >
               <Text>Start Quiz</Text>
